@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1148</width>
-    <height>767</height>
+    <width>1335</width>
+    <height>834</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -132,10 +132,10 @@
    <widget class="QListWidget" name="wordList">
     <property name="geometry">
      <rect>
-      <x>970</x>
+      <x>1160</x>
       <y>10</y>
       <width>171</width>
-      <height>691</height>
+      <height>781</height>
      </rect>
     </property>
    </widget>
@@ -144,8 +144,8 @@
      <rect>
       <x>10</x>
       <y>80</y>
-      <width>951</width>
-      <height>621</height>
+      <width>1141</width>
+      <height>711</height>
      </rect>
     </property>
     <property name="readOnly">
@@ -155,8 +155,8 @@
    <widget class="QPushButton" name="meaningP">
     <property name="geometry">
      <rect>
-      <x>100</x>
-      <y>710</y>
+      <x>450</x>
+      <y>800</y>
       <width>141</width>
       <height>24</height>
      </rect>
@@ -168,8 +168,8 @@
    <widget class="QPushButton" name="meaningR">
     <property name="geometry">
      <rect>
-      <x>260</x>
-      <y>710</y>
+      <x>630</x>
+      <y>800</y>
       <width>141</width>
       <height>24</height>
      </rect>

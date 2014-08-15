@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import sys
 from PyQt4 import Qt, QtGui, QtCore, uic
 import pyaudio
@@ -84,7 +85,8 @@ class WordLearnerUI(QtGui.QMainWindow):
 #         self.statusLabel.setText(str(self.wordIndex+1) + '/' + str(len(self.dirList)))
  
     def addWidgets(self):
-        self.ui = uic.loadUi('WordLearner.ui', self)
+#         self.ui = uic.loadUi('WordLearner.ui', self)
+        self.ui = uic.loadUi('mainwindow.ui', self)
         self.show()
 
     def record(self, AUDIO_OUTPUT_FILENAME, arg1):
