@@ -34,10 +34,12 @@ class WordLearnerUI(QtGui.QMainWindow):
         
         self.dirList = filter(self.isDir, os.listdir(self.rootDir))
         self.dirList = sorted(self.dirList, key=lambda s: s.lower())
-        
+        self.dirList = self.dirList[0:700]
+        i=1
         for text in self.dirList:
             item = QtGui.QListWidgetItem()
-            item.setText(text)
+            item.setText(text+"  "+str(i))
+            i=i+1
 #             item.setBackground(QtGui.QColor('red'))
             self.wordList.addItem(item)
         
@@ -101,7 +103,7 @@ class WordLearnerUI(QtGui.QMainWindow):
         while self.isRecording == True:
             time.sleep(.2)
         p.send_signal(subprocess.signal.SIGTERM)
-        self.play(AUDIO_OUTPUT_FILENAME)
+#         self.play(AUDIO_OUTPUT_FILENAME)
 
     def record_old(self, WAVE_OUTPUT_FILENAME, arg1):
         print WAVE_OUTPUT_FILENAME
@@ -164,7 +166,6 @@ class WordLearnerUI(QtGui.QMainWindow):
     def play(self, fileName):
         playmp3 = ["mpg123", fileName]
         subprocess.Popen(playmp3)
-        print "another"
 
     def play_old(self, fileName):
         if os.path.isfile(fileName):
