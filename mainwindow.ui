@@ -162,13 +162,16 @@
               <item>
                <layout class="QHBoxLayout" name="horizontalLayout_4">
                 <property name="spacing">
-                 <number>100</number>
+                 <number>200</number>
                 </property>
                 <property name="leftMargin">
-                 <number>100</number>
+                 <number>200</number>
+                </property>
+                <property name="topMargin">
+                 <number>0</number>
                 </property>
                 <property name="rightMargin">
-                 <number>100</number>
+                 <number>200</number>
                 </property>
                 <item>
                  <widget class="QPushButton" name="meaningP">
