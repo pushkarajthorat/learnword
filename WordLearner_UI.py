@@ -26,11 +26,12 @@ class WordLearnerUI(QtGui.QMainWindow):
         self.rootDir = "./oxford-dict/"
         self.meaningR.pressed.connect(self.meaningPressed)
         self.meaningR.released.connect(self.meaningReleased)
-
+        
         self.leftButton.clicked.connect(self.previous)
         self.rightButton.clicked.connect(self.next)
         self.assesment.valueChanged.connect(self.updateAssesment)
         
+        self.pronounce.clicked.connect(self.doPronounce)
         self.meaningP.clicked.connect(self.meaningPlay)
         
         self.dirList = filter(self.isDir, os.listdir(self.rootDir))
@@ -52,6 +53,9 @@ class WordLearnerUI(QtGui.QMainWindow):
         self.wordIndex = 0
         self.showWord()
     
+    def doPronounce(self):
+        self.play(self.getCurrentWordPath() + "/"+ self.getCurrentWord() + ".mp3")
+        
     def wordClicked(self):
         if self.wordIndex != self.wordList.currentRow():
             self.wordIndex = self.wordList.currentRow()
@@ -76,7 +80,10 @@ class WordLearnerUI(QtGui.QMainWindow):
          self.showWord()
         
     def getCurrentWordPath(self):
-        return str(self.rootDir + self.dirList[self.wordIndex] + "/")
+        return str(self.rootDir + self.getCurrentWord() + "/")
+        
+    def getCurrentWord(self):
+        return self.dirList[self.wordIndex]
         
     def showWord(self):
         try:
@@ -105,7 +112,8 @@ class WordLearnerUI(QtGui.QMainWindow):
         p = subprocess.Popen(reccmd, stdout=subprocess.PIPE)
         p2 = subprocess.Popen(mp3cmd, stdin=p.stdout)
         while self.isRecording == True:
-            time.sleep(.2)
+            time.sleep(.1)
+        p2.send_signal(subprocess.signal.SIGTERM)
         p.send_signal(subprocess.signal.SIGTERM)
 #         self.play(AUDIO_OUTPUT_FILENAME)
 

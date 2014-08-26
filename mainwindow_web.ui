@@ -87,8 +87,8 @@
              <widget class="QLabel" name="label_6">
               <property name="geometry">
                <rect>
-                <x>440</x>
-                <y>0</y>
+                <x>210</x>
+                <y>30</y>
                 <width>54</width>
                 <height>17</height>
                </rect>
@@ -100,7 +100,7 @@
              <widget class="QLabel" name="label_7">
               <property name="geometry">
                <rect>
-                <x>50</x>
+                <x>10</x>
                 <y>0</y>
                 <width>81</width>
                 <height>17</height>
@@ -113,7 +113,7 @@
              <widget class="QLabel" name="label_4">
               <property name="geometry">
                <rect>
-                <x>330</x>
+                <x>160</x>
                 <y>0</y>
                 <width>41</width>
                 <height>21</height>
@@ -126,9 +126,9 @@
              <widget class="QSlider" name="assesment">
               <property name="geometry">
                <rect>
-                <x>50</x>
+                <x>10</x>
                 <y>20</y>
-                <width>441</width>
+                <width>251</width>
                 <height>16</height>
                </rect>
               </property>
@@ -142,8 +142,8 @@
              <widget class="QLabel" name="label_3">
               <property name="geometry">
                <rect>
-                <x>160</x>
-                <y>0</y>
+                <x>60</x>
+                <y>30</y>
                 <width>71</width>
                 <height>17</height>
                </rect>
@@ -158,18 +158,7 @@
             <widget class="QWidget" name="widget_5" native="true">
              <layout class="QVBoxLayout" name="verticalLayout_5">
               <item>
-               <layout class="QVBoxLayout" name="verticalLayout_4">
-                <item>
-                 <widget class="QTextEdit" name="meaningTextEdit">
-                  <property name="font">
-                   <font>
-                    <family>Tahoma</family>
-                    <pointsize>14</pointsize>
-                   </font>
-                  </property>
-                 </widget>
-                </item>
-               </layout>
+               <layout class="QVBoxLayout" name="verticalLayout_4"/>
               </item>
              </layout>
             </widget>
