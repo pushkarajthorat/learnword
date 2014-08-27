@@ -11,6 +11,9 @@ import subprocess
 from random import shuffle
 from PyQt4.QtWebKit import *
 import pickle
+from PyQt4.QtGui import QKeySequence
+import PyQt4
+
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -31,11 +34,14 @@ class WordLearnerUI(QtGui.QMainWindow):
         self.meaningR.released.connect(self.meaningReleased)
         
         self.web = QWebView()
-        self.verticalLayout_4.addWidget(self.web)
+        self.verticalLayout_7.addWidget(self.web)
         
         self.leftButton.clicked.connect(self.previous)
         self.rightButton.clicked.connect(self.next)
         self.assesment.valueChanged.connect(self.updateAssesment)
+        self.leftButton.clicked.connect(self.save_assesment)
+        
+        self.chkbxShowMeaning.stateChanged.connect(self.chkbxShowMeaningValueChanged)
         self.assesmentData = self.load_assesment()
         
         self.pronounce.clicked.connect(self.doPronounce)
@@ -44,12 +50,11 @@ class WordLearnerUI(QtGui.QMainWindow):
         self.dirList = filter(self.isDir, os.listdir(self.rootDir))
         self.dirList = sorted(self.dirList, key=lambda s: s.lower())
         self.dirList = self.dirList[0:700]
-        
         self.dirList = open('/home/pushkaraj.thorat_fedora/workspace/python/GREPrep/today').read().splitlines() 
         
 #         shuffle(self.dirList)
         
-        self.colorspectum=[QtGui.QColor(255,0,0), QtGui.QColor(252,180,20), QtGui.QColor(255,255,0), QtGui.QColor(120,255,0)]
+        self.colorspectum=[QtGui.QColor(255,102,102), QtGui.QColor(246,183,102), QtGui.QColor(236,255,107), QtGui.QColor(180,255,157)]
         i=1
         for text in self.dirList:
             item = QtGui.QListWidgetItem()
@@ -62,10 +67,28 @@ class WordLearnerUI(QtGui.QMainWindow):
             
         self.wordIndex = 0
         self.showWord()
-    
-    def save_assesment(self, obj):
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key_Left:
+            self.assesment.setValue(self.assesment.value()-1)
+        if event.key() == Qt.Key_Right:
+            self.assesment.setValue(self.assesment.value()+1)
+ 
+        if event.key() == Qt.Key_Down:
+            self.next
+        if event.key() == Qt.Key_Up:
+            self.previous
+            
+
+    def chkbxShowMeaningValueChanged(self):
+        if self.chkbxShowMeaning.isChecked():
+            self.web.show();
+        else:
+            self.web.hide();
+        
+    def save_assesment(self):
         with open('assesment.pkl', 'wb') as f:
-            pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(self.assesmentData, f, pickle.HIGHEST_PROTOCOL)
     
     def load_assesment(self):
         try:
@@ -119,7 +142,8 @@ class WordLearnerUI(QtGui.QMainWindow):
         self.assesment.setValue(self.getAssesmentValue(self.getCurrentWord().lower()))
         self.wordLabel.setText("<b>" + self.dirList[self.wordIndex] + "</b>")
 #         self.meaningTextEdit.setText(open(self.getCurrentWordPath() + "meaning").read())
-        self.web.load(QUrl("/home/pushkaraj.thorat_fedora/Desktop/gre/freedictionary/"+self.dirList[self.wordIndex]+"/"+self.dirList[self.wordIndex]+" - definition of "+self.dirList[self.wordIndex]+" by The Free Dictionary.html"))
+        if self.chkbxShowMeaning.isChecked():
+            self.web.load(QUrl("/home/pushkaraj.thorat_fedora/Desktop/gre/freedictionary/"+self.dirList[self.wordIndex]+"/"+self.dirList[self.wordIndex]+" - definition of "+self.dirList[self.wordIndex]+" by The Free Dictionary.html"))
 #         self.sentenceTextEdit.setText(open(self.getCurrentWordPath()+"sentences").read())
         self.wordList.setCurrentRow(self.wordIndex)
 #         self.statusLabel.setText(str(self.wordIndex+1) + '/' + str(len(self.dirList)))
@@ -227,7 +251,7 @@ class WordLearnerUI(QtGui.QMainWindow):
             
             p.terminate()
     def closeEvent(self, event):
-        self.save_assesment(self.assesmentData)
+        self.save_assesment()
         event.accept()
 
 def main():
