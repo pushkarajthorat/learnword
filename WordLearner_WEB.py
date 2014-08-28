@@ -14,6 +14,38 @@ import pickle
 from PyQt4.QtGui import QKeySequence
 import PyQt4
 
+#page download STARTS
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+import time
+import os
+import os.path
+import sys
+from subprocess import call
+from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
+from duplicity.tarfile import LENGTH_LINK
+
+def downloadPage(downloadDir, x):
+    fp = FirefoxProfile();
+    
+    fp.set_preference("browser.download.folderList",2)
+    fp.set_preference("browser.download.manager.showWhenStarting",False)
+    fp.set_preference("browser.download.dir",downloadDir)
+    
+    driver = webdriver.Firefox(firefox_profile=fp)
+    driver.get("http://www.thefreedictionary.com/p/" + x)
+    
+    saveas = ActionChains(driver).key_down(Keys.CONTROL).send_keys('s').key_up(Keys.CONTROL)
+    saveas.perform()
+    
+    time.sleep(1)
+    call(['xte','key Return'])
+    time.sleep(1)
+    driver.quit()
+    time.sleep(1)
+
+#page download ENDS
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -46,11 +78,21 @@ class WordLearnerUI(QtGui.QMainWindow):
         
         self.pronounce.clicked.connect(self.doPronounce)
         self.meaningP.clicked.connect(self.meaningPlay)
+        self.btnDownload.clicked.connect(self.btnDownloadClicked)
         
-        self.dirList = filter(self.isDir, os.listdir(self.rootDir))
-        self.dirList = sorted(self.dirList, key=lambda s: s.lower())
-        self.dirList = self.dirList[0:700]
-        self.dirList = open('/home/pushkaraj.thorat_fedora/workspace/python/GREPrep/today').read().splitlines() 
+        #self.dirList = filter(self.isDir, os.listdir(self.rootDir))
+        #self.dirList = sorted(self.dirList, key=lambda s: s.lower())
+        #self.dirList = self.dirList[0:700]
+        #self.dirList = open('/home/pushkaraj.thorat_fedora/workspace/python/GREPrep/today').read().splitlines() 
+        self.dirList  = []
+        
+        self.meaningDictionary = {}
+        for line in open('BarronsWordList.txt'):
+            line=line.strip()
+            key=line.split('\t')[0].split(' ')[0].split('(')[0]
+            self.dirList.append(key)
+            value=line[len(key):].strip()           
+            self.meaningDictionary[key] = value
         
 #         shuffle(self.dirList)
         
@@ -67,7 +109,15 @@ class WordLearnerUI(QtGui.QMainWindow):
             
         self.wordIndex = 0
         self.showWord()
-
+        
+    def btnDownloadClicked(self):
+        try:
+            os.makedirs(self.getCurrentWordPath())
+        except:
+            pass
+        
+        downloadPage(self.getCurrentWordPath(), self.getCurrentWord())
+        
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Left:
             self.assesment.setValue(self.assesment.value()-1)
@@ -83,8 +133,10 @@ class WordLearnerUI(QtGui.QMainWindow):
     def chkbxShowMeaningValueChanged(self):
         if self.chkbxShowMeaning.isChecked():
             self.web.show();
+            self.txtBarronsMeaning.show();
         else:
             self.web.hide();
+            self.txtBarronsMeaning.hide();
         
     def save_assesment(self):
         with open('assesment.pkl', 'wb') as f:
@@ -143,7 +195,10 @@ class WordLearnerUI(QtGui.QMainWindow):
         self.wordLabel.setText("<b>" + self.dirList[self.wordIndex] + "</b>")
 #         self.meaningTextEdit.setText(open(self.getCurrentWordPath() + "meaning").read())
         if self.chkbxShowMeaning.isChecked():
-            self.web.load(QUrl("/home/pushkaraj.thorat_fedora/Desktop/gre/freedictionary/"+self.dirList[self.wordIndex]+"/"+self.dirList[self.wordIndex]+" - definition of "+self.dirList[self.wordIndex]+" by The Free Dictionary.html"))
+            self.txtBarronsMeaning.setText(self.meaningDictionary.get(self.getCurrentWord()))
+            l = filter(lambda s:s.endswith("by The Free Dictionary.html"), os.listdir(self.getCurrentWordPath()))
+            if len(l)>=1:
+                self.web.load(QUrl(self.getCurrentWordPath()+l[0]))
 #         self.sentenceTextEdit.setText(open(self.getCurrentWordPath()+"sentences").read())
         self.wordList.setCurrentRow(self.wordIndex)
 #         self.statusLabel.setText(str(self.wordIndex+1) + '/' + str(len(self.dirList)))
